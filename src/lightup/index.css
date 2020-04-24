@@ -1,0 +1,13 @@
+#lightup {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#lightup .container {
+  padding: 50px 30px;
+}
+
+#lightup .canvas-container {
+  padding-top: 20px;
+}
