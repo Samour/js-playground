@@ -1,0 +1,10 @@
+#sudoku .controls {
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+#sudoku .controls button {
+  margin: 5px;
+  padding: 8px;
+}

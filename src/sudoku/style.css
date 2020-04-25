@@ -1,0 +1,15 @@
+#sudoku {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  cursor: default;
+  user-select: none;
+}
+
+#sudoku .container {
+  padding: 50px 30px;
+}
+
+#sudoku .controls-container {
+  padding: 20px;
+}

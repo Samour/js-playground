@@ -1,0 +1,12 @@
+#sudoku .row {
+  height: 40px;
+  border-bottom: 1px solid black;
+}
+
+#sudoku .row:first-child {
+  border-top: 2px solid black;
+}
+
+#sudoku .row:nth-child(3n) {
+  border-bottom: 2px solid black;
+}

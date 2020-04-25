@@ -1,9 +1,10 @@
 import React from 'react';
-import Lightup from 'lightup';
+// import Lightup from 'lightup';
+import Sudoku from 'sudoku';
 
 function App() {
   return (
-    <Lightup/>
+    <Sudoku/>
   );
 }
 

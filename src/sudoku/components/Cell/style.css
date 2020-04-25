@@ -1,0 +1,62 @@
+#sudoku .cell {
+  height: 40px;
+  width: 40px;
+  border-right: 1px solid black;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  left: 0;
+}
+
+#sudoku .cell:first-child {
+  border-left: 2px solid black;
+}
+
+#sudoku .cell:nth-child(3n) {
+  border-right: 2px solid black;
+}
+
+#sudoku .cell.highlight {
+  background-color: #ddddff;
+}
+
+#sudoku .cell.fixed {
+  background-color: #ffffdd;
+}
+
+#sudoku .cell .inner {
+  position: absolute;
+  padding-top: 8px;
+  height: 40px;
+  width: 40px;
+}
+
+#sudoku .cell .note {
+  font-size: 10px;
+  position: absolute;
+  padding-left: 2px;
+}
+
+#sudoku .cell .note.x-offset-0 {
+  left: 0;
+}
+
+#sudoku .cell .note.x-offset-1 {
+  left: 13.333px;
+}
+
+#sudoku .cell .note.x-offset-2 {
+  left: 26.666px;
+}
+
+#sudoku .cell .note.y-offset-0 {
+  top: 0;
+}
+
+#sudoku .cell .note.y-offset-1 {
+  top: 13.333px;
+}
+
+#sudoku .cell .note.y-offset-2 {
+  top: 26.666px;
+}
