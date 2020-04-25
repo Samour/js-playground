@@ -8,6 +8,7 @@ export enum EventType {
   SET_NOTE_MODE = 'SetNodeMode',
   ADD_CELL_POSSIBLE = 'AddCellPossible',
   REMOVE_CELL_POSSIBLE = 'RemoveCellPossible',
+  SET_BOARD_STATE = 'SetBoardState',
 }
 
 export interface IEvent {

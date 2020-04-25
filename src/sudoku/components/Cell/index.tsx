@@ -22,10 +22,10 @@ class Cell extends React.Component<IProps> {
   }
 
   private renderNoteCell(i: number): JSX.Element {
-    const x = Math.floor((i - 1) / 3);
-    const y = (i - 1) % 3;
+    const x = (i - 1) % 3;
+    const y = Math.floor((i - 1) / 3);
 
-    return <div className={`note x-offset-${x} y-offset-${y}`}>{i}</div>;
+    return <div key={i} className={`note x-offset-${x} y-offset-${y}`}>{i}</div>;
   }
 
   private renderInnerNotes(): JSX.Element[] {

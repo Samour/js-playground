@@ -7,6 +7,7 @@ import {
   SetNoteModeEvent,
   AddCellPossibleEvent,
   RemoveCellPossibleEvent,
+  SetBoardStateEvent,
 } from './events';
 
 const initialState = (): SudokuState => {
@@ -110,6 +111,13 @@ function removeCellPossible(state: SudokuState, event: RemoveCellPossibleEvent):
   };
 }
 
+function setBoardState(state: SudokuState, event: SetBoardStateEvent): SudokuState {
+  return {
+    ...state,
+    board: event.board,
+  };
+}
+
 export default function reducer(state: SudokuState | undefined, event: IEvent): SudokuState {
   if (!state) {
     state = initialState();
@@ -134,6 +142,8 @@ export default function reducer(state: SudokuState | undefined, event: IEvent): 
       return addCellPossible(state, event as AddCellPossibleEvent);
     case EventType.REMOVE_CELL_POSSIBLE:
       return removeCellPossible(state, event as RemoveCellPossibleEvent);
+    case EventType.SET_BOARD_STATE:
+      return setBoardState(state, event as SetBoardStateEvent);
     default:
       return state;
   }

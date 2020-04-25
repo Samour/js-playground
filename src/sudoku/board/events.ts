@@ -1,4 +1,5 @@
 import { EventType, IEvent } from 'sudoku/events';
+import { SudokuCell } from './model';
 
 export interface ClearBoardEvent extends IEvent {
   type: typeof EventType.CLEAR_BOARD;
@@ -51,6 +52,11 @@ export interface RemoveCellPossibleEvent extends IEvent {
   value: number;
 }
 
+export interface SetBoardStateEvent extends IEvent {
+  type: typeof EventType.SET_BOARD_STATE;
+  board: SudokuCell[][];
+}
+
 export const clearBoardEvent = (): ClearBoardEvent => ({
   type: EventType.CLEAR_BOARD,
 });
@@ -88,16 +94,21 @@ export const setNoteModeEvent = (mode: boolean): SetNoteModeEvent => ({
   mode,
 });
 
-export const addCellPossibleEvent = (x: number, y: number, value: number) => ({
+export const addCellPossibleEvent = (x: number, y: number, value: number): AddCellPossibleEvent => ({
   type: EventType.ADD_CELL_POSSIBLE,
   x,
   y,
   value,
 });
 
-export const removeCellPossibleEvent = (x: number, y: number, value: number) => ({
+export const removeCellPossibleEvent = (x: number, y: number, value: number): RemoveCellPossibleEvent => ({
   type: EventType.REMOVE_CELL_POSSIBLE,
   x,
   y,
   value,
+});
+
+export const setBoardStateEvent = (board: SudokuCell[][]): SetBoardStateEvent => ({
+  type: EventType.SET_BOARD_STATE,
+  board,
 });

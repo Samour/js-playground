@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Cell {
+  int32 value = 1;
+  bool fixed = 2;
+  repeated int32 possible = 3;
+}
+
+message Board {
+  repeated Cell cell = 1;
+}

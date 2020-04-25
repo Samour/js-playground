@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { SudokuState } from './board/model';
 import reducer from './board/reducer';
 import BoardService from './board/service';
+import Controls from './components/Controls';
 import Board from './components/Board';
 import GameControls from './components/GameControls';
 import './style.css';
@@ -29,9 +30,12 @@ export default class Sudoku extends React.Component {
       <Provider store={this.boardStore}>
         <div id="sudoku">
           <div className="container">
-            <Board boardService={this.boardService}/>
             <div className="controls-container">
-              <GameControls boardService={this.boardService}/>
+              <Controls boardService={this.boardService} />
+            </div>
+            <Board boardService={this.boardService} />
+            <div className="controls-container">
+              <GameControls boardService={this.boardService} />
             </div>
           </div>
         </div>
