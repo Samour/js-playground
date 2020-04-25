@@ -6,7 +6,9 @@ import './style.css';
 class Cell extends React.Component<IProps> {
 
   private handleClick = () => {
-    this.props.boardService.focusCell(this.props.x, this.props.y);
+    if (!this.props.algorithmRunning) {
+      this.props.boardService.focusCell(this.props.x, this.props.y);
+    }
   }
 
   private classNames(): string {
@@ -15,6 +17,8 @@ class Cell extends React.Component<IProps> {
       names.push('fixed');
     } else if (!!this.props.focusCell && this.props.focusCell.x === this.props.x
       && this.props.focusCell.y === this.props.y) {
+      names.push('focus');
+    } else if (this.props.cell.highlight) {
       names.push('highlight');
     }
 

@@ -16,12 +16,16 @@
   border-right: 2px solid black;
 }
 
-#sudoku .cell.highlight {
+#sudoku .cell.focus {
   background-color: #ddddff;
 }
 
 #sudoku .cell.fixed {
   background-color: #ffffdd;
+}
+
+#sudoku .cell.highlight {
+  background-color: #ff8888;
 }
 
 #sudoku .cell .inner {

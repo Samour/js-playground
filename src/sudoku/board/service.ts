@@ -88,7 +88,7 @@ export default class BoardService {
       for (let y = 0; y < 9; y++) {
         const cellPb = boardPb.getCellList()[x * 9 + y];
         const cell = new SudokuCell();
-        cell.value = cellPb.getValue();
+        cell.value = cellPb.getValue() || null;
         cell.fixed = cellPb.getFixed();
         cell.possible = new Set(cellPb.getPossibleList());
         col.push(cell);

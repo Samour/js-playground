@@ -4,10 +4,12 @@ import {
   FocusCellEvent,
   SetCellValueEvent,
   SetCellFixedEvent,
+  SetCellHighlightEvent,
   SetNoteModeEvent,
   AddCellPossibleEvent,
   RemoveCellPossibleEvent,
   SetBoardStateEvent,
+  AlgorithmCallbackEvent,
 } from './events';
 
 const initialState = (): SudokuState => {
@@ -24,6 +26,8 @@ const initialState = (): SudokuState => {
     focusCell: null,
     board,
     noteMode: false,
+    algorithmRunning: false,
+    algorithmCallback: null,
   };
 }
 
@@ -61,6 +65,17 @@ function setCellFixed(state: SudokuState, event: SetCellFixedEvent): SudokuState
   const board = state.board.map((c) => [...c]);
   board[event.x][event.y] = board[event.x][event.y].copy();
   board[event.x][event.y].fixed = event.fixed;
+
+  return {
+    ...state,
+    board,
+  };
+}
+
+function setCellHighlight(state: SudokuState, event: SetCellHighlightEvent): SudokuState {
+  const board = state.board.map((c) => [...c]);
+  board[event.x][event.y] = board[event.x][event.y].copy();
+  board[event.x][event.y].highlight = event.hightlight;
 
   return {
     ...state,
@@ -118,6 +133,29 @@ function setBoardState(state: SudokuState, event: SetBoardStateEvent): SudokuSta
   };
 }
 
+function algorithmStart(state: SudokuState): SudokuState {
+  return {
+    ...state,
+    algorithmRunning: true,
+    algorithmCallback: null,
+  };
+}
+
+function algorithmEnd(state: SudokuState): SudokuState {
+  return {
+    ...state,
+    algorithmRunning: false,
+    algorithmCallback: null,
+  };
+}
+
+function algorithmCallback(state: SudokuState, event: AlgorithmCallbackEvent): SudokuState {
+  return {
+    ...state,
+    algorithmCallback: event.callback,
+  };
+}
+
 export default function reducer(state: SudokuState | undefined, event: IEvent): SudokuState {
   if (!state) {
     state = initialState();
@@ -134,6 +172,8 @@ export default function reducer(state: SudokuState | undefined, event: IEvent): 
       return setCellValue(state, event as SetCellValueEvent);
     case EventType.SET_CELL_FIXED:
       return setCellFixed(state, event as SetCellFixedEvent);
+    case EventType.SET_CELL_HIGHLIGHT:
+      return setCellHighlight(state, event as SetCellHighlightEvent);
     case EventType.LOCK_ALL_VALUES:
       return lockAllValues(state);
     case EventType.SET_NOTE_MODE:
@@ -144,6 +184,12 @@ export default function reducer(state: SudokuState | undefined, event: IEvent): 
       return removeCellPossible(state, event as RemoveCellPossibleEvent);
     case EventType.SET_BOARD_STATE:
       return setBoardState(state, event as SetBoardStateEvent);
+    case EventType.ALGORITHM_START:
+      return algorithmStart(state);
+    case EventType.ALGORITHM_END:
+      return algorithmEnd(state);
+    case EventType.ALGORITHM_CALLBACK:
+      return algorithmCallback(state, event as AlgorithmCallbackEvent);
     default:
       return state;
   }

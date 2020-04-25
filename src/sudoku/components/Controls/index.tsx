@@ -1,7 +1,10 @@
 import React from 'react';
-import { IProps } from './props';
+import { connect } from 'react-redux';
+import { IProps, mapStateToProps } from './props';
 
-export default class Controls extends React.Component<IProps> {
+class Controls extends React.Component<IProps> {
+
+  private static readonly FILE_TYPE = '.puzzle';
 
   private save = () => {
     const data = this.props.boardService.seralise();
@@ -16,6 +19,7 @@ export default class Controls extends React.Component<IProps> {
   private open = () => {
     const input = document.createElement("input");
     input.type = 'file';
+    input.accept = Controls.FILE_TYPE;
     input.click();
 
     input.addEventListener('change', () => {
@@ -26,12 +30,23 @@ export default class Controls extends React.Component<IProps> {
     });
   }
 
+  solveButton(): JSX.Element {
+    if (this.props.algorithmRunning) {
+      return <button onClick={() => this.props.solverService.stop()}>Stop</button>;
+    } else {
+      return <button onClick={() => this.props.solverService.solve()}>Solve</button>;
+    }
+  }
+
   render() {
     return (
       <div className="controls">
-        <button onClick={this.open}>Load puzzle</button>
-        <button onClick={this.save}>Save puzzle</button>
+        <button onClick={this.open} disabled={this.props.algorithmRunning}>Load puzzle</button>
+        <button onClick={this.save} disabled={this.props.algorithmRunning}>Save puzzle</button>
+        {this.solveButton()}
       </div>
     );
   }
 }
+
+export default connect(mapStateToProps)(Controls);

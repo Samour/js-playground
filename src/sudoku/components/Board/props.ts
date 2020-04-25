@@ -5,6 +5,7 @@ export interface IMappedProps {
   board: SudokuCell[][];
   focusCell: Coordinate | null;
   noteMode: boolean;
+  algorithmRunning: boolean;
 }
 
 export interface IProps extends IMappedProps {
@@ -15,4 +16,5 @@ export const mapStateToProps = (state: SudokuState): IMappedProps => ({
   board: state.board,
   focusCell: state.focusCell,
   noteMode: state.noteMode,
+  algorithmRunning: state.algorithmRunning,
 });

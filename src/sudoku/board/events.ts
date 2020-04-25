@@ -33,6 +33,13 @@ export interface LockAllValuesEvent extends IEvent {
   type: typeof EventType.LOCK_ALL_VALUES;
 }
 
+export interface SetCellHighlightEvent extends IEvent {
+  type: typeof EventType.SET_CELL_HIGHLIGHT;
+  x: number;
+  y: number;
+  hightlight: boolean;
+}
+
 export interface SetNoteModeEvent extends IEvent {
   type: typeof EventType.SET_NOTE_MODE;
   mode: boolean;
@@ -55,6 +62,19 @@ export interface RemoveCellPossibleEvent extends IEvent {
 export interface SetBoardStateEvent extends IEvent {
   type: typeof EventType.SET_BOARD_STATE;
   board: SudokuCell[][];
+}
+
+export interface AlgorithmStartEvent extends IEvent {
+  type: typeof EventType.ALGORITHM_START;
+};
+
+export interface AlgorithmEndEvent extends IEvent {
+  type: typeof EventType.ALGORITHM_END;
+};
+
+export interface AlgorithmCallbackEvent extends IEvent {
+  type: typeof EventType.ALGORITHM_CALLBACK;
+  callback: () => void;
 }
 
 export const clearBoardEvent = (): ClearBoardEvent => ({
@@ -89,6 +109,13 @@ export const lockAllValuesEvent = (): LockAllValuesEvent => ({
   type: EventType.LOCK_ALL_VALUES,
 });
 
+export const setCellHighlightEvent = (x: number, y: number, hightlight: boolean): SetCellHighlightEvent => ({
+  type: EventType.SET_CELL_HIGHLIGHT,
+  x,
+  y,
+  hightlight,
+});
+
 export const setNoteModeEvent = (mode: boolean): SetNoteModeEvent => ({
   type: EventType.SET_NOTE_MODE,
   mode,
@@ -111,4 +138,17 @@ export const removeCellPossibleEvent = (x: number, y: number, value: number): Re
 export const setBoardStateEvent = (board: SudokuCell[][]): SetBoardStateEvent => ({
   type: EventType.SET_BOARD_STATE,
   board,
+});
+
+export const algorithmStartEvent = (): AlgorithmStartEvent => ({
+  type: EventType.ALGORITHM_START,
+});
+
+export const algorithmEndEvent = (): AlgorithmEndEvent => ({
+  type: EventType.ALGORITHM_END,
+});
+
+export const algorithmCallbackEvent = (callback: () => void): AlgorithmCallbackEvent => ({
+  type: EventType.ALGORITHM_CALLBACK,
+  callback,
 });

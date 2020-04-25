@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { SudokuState } from './board/model';
 import reducer from './board/reducer';
 import BoardService from './board/service';
+import SolverService from './solver/service';
+import SolverServiceBuilder from './solver/builder';
 import Controls from './components/Controls';
 import Board from './components/Board';
 import GameControls from './components/GameControls';
@@ -13,16 +15,18 @@ export default class Sudoku extends React.Component {
 
   private boardStore: Store<SudokuState>;
   private boardService: BoardService;
+  private solverService: SolverService;
 
   constructor(props: any) {
     super(props);
 
     this.boardStore = createStore(reducer);
     this.boardService = new BoardService(this.boardStore);
-  }
-
-  componentDidMount() {
-
+    this.solverService = new SolverServiceBuilder()
+      .withStore(this.boardStore)
+      .withService(this.boardService)
+      .withDefaultAnalyser()
+      .build();
   }
 
   render(): JSX.Element {
@@ -31,7 +35,7 @@ export default class Sudoku extends React.Component {
         <div id="sudoku">
           <div className="container">
             <div className="controls-container">
-              <Controls boardService={this.boardService} />
+              <Controls boardService={this.boardService} solverService={this.solverService} />
             </div>
             <Board boardService={this.boardService} />
             <div className="controls-container">

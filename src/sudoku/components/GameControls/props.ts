@@ -3,6 +3,7 @@ import BoardService from 'sudoku/board/service';
 
 interface IMappedProps {
   noteMode: boolean;
+  algorithmRunning: boolean;
 }
 
 export interface IProps extends IMappedProps {
@@ -11,4 +12,5 @@ export interface IProps extends IMappedProps {
 
 export const mapStateToProps = (state: SudokuState): IMappedProps => ({
   noteMode: state.noteMode,
+  algorithmRunning: state.algorithmRunning,
 });

@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { SudokuCell } from 'sudoku/board/model';
 import { IProps, mapStateToProps } from './props';
 import Cell from 'sudoku/components/Cell';
 import './style.css';
@@ -41,7 +40,7 @@ class Board extends React.Component<IProps> {
   }
 
   private handleKeyPress = (event: React.KeyboardEvent) => {
-    if (!this.props.focusCell) {
+    if (this.props.algorithmRunning || !this.props.focusCell) {
       return;
     }
     const { x, y } = this.props.focusCell;
@@ -52,16 +51,17 @@ class Board extends React.Component<IProps> {
     }
   }
 
-  private renderColumn = (column: SudokuCell[], x: number): JSX.Element => {
-    const cells = column.map((c, y) => <Cell key={y} boardService={this.props.boardService} x={x} y={y} cell={c} />);
-
-    return <div key={x} className="row">{cells}</div>;
-  }
-
   render(): JSX.Element {
-    const cells = this.props.board.map(this.renderColumn);
+    const rows: JSX.Element[] = [];
+    for (let y = 0; y < 9; y++) {
+      const cells: JSX.Element[] = [];
+      for (let x = 0; x < 9; x++) {
+        cells.push(<Cell key={x} boardService={this.props.boardService} x={x} y={y} cell={this.props.board[x][y]} />);
+      }
+      rows.push(<div key={y} className="row">{cells}</div>);
+    }
 
-    return <div tabIndex={1} onKeyDown={this.handleKeyPress}>{cells}</div>;
+    return <div tabIndex={1} onKeyDown={this.handleKeyPress}>{rows}</div>;
   }
 }
 

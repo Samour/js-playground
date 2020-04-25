@@ -3,6 +3,7 @@ import BoardService from 'sudoku/board/service';
 
 interface IMappedProps {
   focusCell: Coordinate | null;
+  algorithmRunning: boolean;
 }
 
 export interface IProps extends IMappedProps {
@@ -14,4 +15,5 @@ export interface IProps extends IMappedProps {
 
 export const mapStateToProps = (state: SudokuState): IMappedProps => ({
   focusCell: state.focusCell,
+  algorithmRunning: state.algorithmRunning,
 });

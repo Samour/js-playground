@@ -5,11 +5,15 @@ import './style.css';
 
 class GameControls extends React.Component<IProps> {
 
+  private button(onClick: () => any, label: string): JSX.Element {
+    return <button disabled={this.props.algorithmRunning} onClick={onClick}>{label}</button>;
+  }
+
   private modeButton(mode: boolean, label: string): JSX.Element {
     if (this.props.noteMode === mode) {
       return <button disabled={true}>{label}</button>;
     } else {
-      return <button onClick={() => this.props.boardService.setNoteMode(mode)}>{label}</button>;
+      return this.button(() => this.props.boardService.setNoteMode(mode), label);
     }
   }
 
@@ -21,9 +25,9 @@ class GameControls extends React.Component<IProps> {
           {this.modeButton(true, 'Note')}
         </div>
         <div className="controls">
-          <button onClick={() => this.props.boardService.lockAllValues()}>Lock</button>
-          <button onClick={() => this.props.boardService.clearBoard()}>Clear</button>
-          <button onClick={() => this.props.boardService.resetGame()}>Reset</button>
+          {this.button(() => this.props.boardService.lockAllValues(), 'Lock')}
+          {this.button(() => this.props.boardService.clearBoard(), 'Clear')}
+          {this.button(() => this.props.boardService.resetGame(), 'Reset')}
         </div>
       </div>
     )
