@@ -1,0 +1,65 @@
+#futoshiki {
+    .board {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 60px;
+
+        &:focus {
+            outline: none;
+        }
+
+        &.note .cell.highlight {
+            border-style: dashed;
+        }
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .cell {
+        border: 1px solid black;
+        margin: 5px;
+        display: flex;
+        width: 30px;
+        height: 30px;
+        align-items: center;
+        cursor: pointer;
+        flex-wrap: wrap;
+
+        &.hasValue {
+            justify-content: center;
+        }
+
+        &.highlight {
+            border-color: darkblue;
+            border-width: 2px;
+            margin: 4px;
+        }
+
+        .possible {
+            display: flex;
+            font-size: 8px;
+            width: 10px;
+            justify-content: center;
+        }
+    }
+
+    .row-lt {
+        width: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .col-lt {
+        height: 10px;
+        width: 32px;
+        margin: 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
