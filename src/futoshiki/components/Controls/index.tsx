@@ -14,6 +14,7 @@ import { resetBoardEvent } from 'futoshiki/events/ResetBoardEvent';
 import { solutionStatusEvent } from 'futoshiki/events/SolutionStatusEvent';
 import { showBoards } from 'futoshiki/services/BoardPersistence';
 import verifySolution from 'futoshiki/services/SolutionVerifier';
+import solvePuzzle from 'futoshiki/services/SolverService';
 
 const GAME_SIZES = [
     5,
@@ -117,6 +118,7 @@ function Controls({
             </div>
             <div className="controls">
                 <button onClick={() => checkSolution(board)}>Verify</button>
+                <button onClick={() => solvePuzzle({ stepTimeout: 500 })}>Solve</button>
             </div>
             <ResultStatusText />
             <div className="controls">
