@@ -1,4 +1,4 @@
-import { NumericMode } from 'futoshiki/model/Controls';
+import { NumericMode, BoardMode } from 'futoshiki/model/Controls';
 import { Controls } from 'futoshiki/model/State';
 import IEvent from 'futoshiki/events/IEvent';
 import { EventType } from 'futoshiki/events/EventType';
@@ -7,7 +7,8 @@ import { IChangeGameSizeEvent } from 'futoshiki/events/ChangeGameSizeEvent';
 const defaultState: Controls = {
     numericMode: NumericMode.VALUE,
     gameSize: 5,
-}
+    boardMode: BoardMode.COMPOSE,
+};
 
 export default function reducer(state: Controls | undefined, event: IEvent): Controls {
     state = state || defaultState;
@@ -15,6 +16,11 @@ export default function reducer(state: Controls | undefined, event: IEvent): Con
         return {
             ...state,
             numericMode: state.numericMode === NumericMode.VALUE ? NumericMode.NOTE : NumericMode.VALUE,
+        };
+    } else if (event.type === EventType.TOGGLE_BOARD_MODE) {
+        return {
+            ...state,
+            boardMode: state.boardMode === BoardMode.COMPOSE ? BoardMode.PLAY : BoardMode.COMPOSE,
         };
     } else if (event.type === EventType.CHANGE_GAME_SIZE) {
         const { gameSize } = event as IChangeGameSizeEvent;

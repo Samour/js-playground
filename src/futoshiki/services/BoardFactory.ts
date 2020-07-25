@@ -12,6 +12,7 @@ export default function createBoard(size: number): Board {
             cells.push({
                 value: null,
                 possible: [],
+                provided: false,
             });
         }
     }

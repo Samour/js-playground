@@ -6,6 +6,7 @@ export interface Coordinate {
 export interface Cell {
     value: number | null;
     possible: number[];
+    provided: boolean;
 }
 
 export interface LTConstraint {

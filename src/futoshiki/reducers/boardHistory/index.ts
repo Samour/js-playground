@@ -13,6 +13,7 @@ const SNAPSHOT_EVENTS: EventType[] = [
     EventType.CLEAR_CELL_NOTES,
     EventType.TOGGLE_LT_CONSTRAINT,
     EventType.LOAD_BOARD,
+    EventType.RESET_BOARD,
 ];
 
 export default (board: Board) => (state: BoardHistory | undefined, event: IEvent): BoardHistory => {

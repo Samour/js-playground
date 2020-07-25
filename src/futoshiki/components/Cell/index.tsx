@@ -42,6 +42,9 @@ function Cell({ cell, x, y, highlight, highlightCell }: IProps & IState & IActio
     const className: string[] = ['cell'];
     if (cell.value) {
         className.push('hasValue');
+        if (cell.provided) {
+            className.push('provided');
+        }
     }
     if (x === highlight?.x && y === highlight?.y) {
         className.push('highlight');

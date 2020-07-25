@@ -20,12 +20,13 @@ export default function reducer(state: Board | undefined, event: IEvent): Board 
         const { size } = event as INewBoardEvent;
         return createBoard(size);
     } else if (event.type === EventType.CELL_VALUE) {
-        const { x, y, value } = event as ICellValueEvent;
+        const { x, y, value, provided } = event as ICellValueEvent;
         return {
             ...state,
             cells: state.cells.map((r, i) => i === x ?
                 r.map((c, j) => j === y ? {
                     ...c,
+                    provided,
                     value,
                 } : c)
                 : r,
@@ -41,6 +42,17 @@ export default function reducer(state: Board | undefined, event: IEvent): Board 
                     possible: [],
                 } : c)
                 : r,
+            ),
+        };
+    } else if (event.type === EventType.RESET_BOARD) {
+        return {
+            ...state,
+            cells: state.cells.map((r) =>
+                r.map((c) => ({
+                    ...c,
+                    value: c.provided ? c.value : null,
+                    possible: [],
+                })),
             ),
         };
     } else if (event.type === EventType.TOGGLE_CELL_NOTE) {

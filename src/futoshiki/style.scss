@@ -31,6 +31,10 @@
 
         &.hasValue {
             justify-content: center;
+
+            &.provided {
+                font-weight: bold;
+            }
         }
 
         &.highlight {

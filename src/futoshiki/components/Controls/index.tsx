@@ -3,10 +3,13 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Undo, Redo } from '@material-ui/icons';
 import { Board } from 'futoshiki/model/Board';
+import { BoardMode } from 'futoshiki/model/Controls';
 import { State, BoardPersistenceMode } from 'futoshiki/model/State';
 import { newBoardEvent } from 'futoshiki/events/NewBoardEvent';
 import { changeGameSizeEvent } from 'futoshiki/events/ChangeGameSizeEvent';
 import { restoreStateEvent } from 'futoshiki/events/RestoreStateEvent';
+import { toggleBoardModeEvent } from 'futoshiki/events/ToggleBoardModeEvent';
+import { resetBoardEvent } from 'futoshiki/events/ResetBoardEvent';
 import { showBoards } from 'futoshiki/services/BoardPersistence';
 
 const GAME_SIZES = [
@@ -23,6 +26,7 @@ interface IProps {
     redoDisabled: boolean;
     boardHistory: Board[];
     currentIndex: number;
+    boardMode: BoardMode;
 }
 
 const mapToProps = (state: State): IProps => ({
@@ -31,6 +35,7 @@ const mapToProps = (state: State): IProps => ({
     redoDisabled: state.boardHistory.currentIndex >= state.boardHistory.historyStates.length - 1,
     boardHistory: state.boardHistory.historyStates,
     currentIndex: state.boardHistory.currentIndex,
+    boardMode: state.controls.boardMode,
 });
 
 interface IActions {
@@ -39,6 +44,8 @@ interface IActions {
     restoreState: (boardState: Board) => void;
     loadView: () => void;
     saveView: () => void;
+    toggleBoardMode: () => void;
+    resetBoard: () => void;
 }
 
 const mapToActions = (dispatch: Dispatch): IActions => ({
@@ -47,6 +54,8 @@ const mapToActions = (dispatch: Dispatch): IActions => ({
     restoreState: (boardState) => dispatch(restoreStateEvent(boardState)),
     saveView: () => showBoards(dispatch)(BoardPersistenceMode.SAVE),
     loadView: () => showBoards(dispatch)(BoardPersistenceMode.LOAD),
+    toggleBoardMode: () => dispatch(toggleBoardModeEvent()),
+    resetBoard: () => dispatch(resetBoardEvent()),
 });
 
 function Controls({
@@ -55,12 +64,17 @@ function Controls({
     redoDisabled,
     boardHistory,
     currentIndex,
+    boardMode,
     newBoard,
     changeGameSize,
     restoreState,
     saveView,
     loadView,
+    toggleBoardMode,
+    resetBoard,
 }: IProps & IActions): JSX.Element {
+    const boardModeText: string = boardMode === BoardMode.COMPOSE ? 'Play Mode' : 'Prepare Mode';
+
     return (
         <>
             <div className="controls">
@@ -68,6 +82,8 @@ function Controls({
                     {GAME_SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
                 <button onClick={() => newBoard(gameSize)}>New Game</button>
+                <button onClick={toggleBoardMode}>{boardModeText}</button>
+                <button onClick={resetBoard}>Reset</button>
                 <button disabled={undoDisabled} onClick={() => restoreState(boardHistory[currentIndex - 1])}>
                     <Undo />
                 </button>

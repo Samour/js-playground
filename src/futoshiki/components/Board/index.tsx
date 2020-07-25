@@ -5,7 +5,7 @@ import {
     Board as BoardModel,
     Coordinate,
 } from 'futoshiki/model/Board';
-import { NumericMode } from 'futoshiki/model/Controls';
+import { NumericMode, BoardMode } from 'futoshiki/model/Controls';
 import { State } from 'futoshiki/model/State';
 import { cellValueEvent } from 'futoshiki/events/CellValueEvent';
 import { toggleCellNoteEvent } from 'futoshiki/events/ToggleCellNoteEvent';
@@ -21,23 +21,25 @@ interface IProps {
     board: BoardModel;
     highlight: Coordinate | null;
     numericMode: NumericMode;
+    boardMode: BoardMode;
 }
 
 const mapToProps = (state: State): IProps => ({
     board: state.board,
     highlight: state.highlight,
     numericMode: state.controls.numericMode,
+    boardMode: state.controls.boardMode,
 });
 
 interface IActions {
-    setCellValue: (x: number, y: number, value: number | null) => void;
+    setCellValue: (x: number, y: number, value: number | null, provided: boolean) => void;
     toggleCellNote: (x: number, y: number, value: number) => void;
     clearCellNotes: (x: number, y: number) => void;
     toggleNumericMode: () => void;
 }
 
 const mapToActions = (dispatch: Dispatch): IActions => ({
-    setCellValue: (x, y, value) => dispatch(cellValueEvent(x, y, value)),
+    setCellValue: (x, y, value, provided) => dispatch(cellValueEvent(x, y, value, provided)),
     toggleCellNote: (x, y, value) => dispatch(toggleCellNoteEvent({ x, y }, value)),
     clearCellNotes: (x, y) => dispatch(clearCellNotesEvent(x, y)),
     toggleNumericMode: () => dispatch(toggleNumericModeEvent()),
@@ -47,6 +49,7 @@ function BoardComponent({
     board,
     highlight,
     numericMode,
+    boardMode,
     setCellValue,
     toggleCellNote,
     clearCellNotes,
@@ -59,7 +62,7 @@ function BoardComponent({
 
         if (e.key === KEY_BACKSPACE) {
             if (numericMode === NumericMode.VALUE) {
-                setCellValue(highlight.x, highlight.y, null);
+                setCellValue(highlight.x, highlight.y, null, boardMode === BoardMode.COMPOSE);
             } else {
                 clearCellNotes(highlight.x, highlight.y);
             }
@@ -75,7 +78,7 @@ function BoardComponent({
         }
 
         if (numericMode === NumericMode.VALUE) {
-            setCellValue(highlight.x, highlight.y, value);
+            setCellValue(highlight.x, highlight.y, value, boardMode === BoardMode.COMPOSE);
         } else {
             toggleCellNote(highlight.x, highlight.y, value);
         }

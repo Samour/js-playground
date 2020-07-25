@@ -1,9 +1,10 @@
 import { Board, Coordinate, PersistedBoardsStore } from 'futoshiki/model/Board';
-import { NumericMode, Screen } from 'futoshiki/model/Controls';
+import { NumericMode, BoardMode, Screen } from 'futoshiki/model/Controls';
 
 export interface Controls {
     numericMode: NumericMode;
     gameSize: number;
+    boardMode: BoardMode;
 }
 
 export interface BoardHistory {

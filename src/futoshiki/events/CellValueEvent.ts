@@ -5,11 +5,18 @@ export interface ICellValueEvent {
     x: number;
     y: number;
     value: number | null;
+    provided: boolean;
 }
 
-export const cellValueEvent = (x: number, y: number, value: number | null): ICellValueEvent => ({
+export const cellValueEvent = (
+    x: number,
+    y: number,
+    value: number | null,
+    provided: boolean,
+): ICellValueEvent => ({
     type: EventType.CELL_VALUE,
     x,
     y,
     value,
+    provided,
 });
