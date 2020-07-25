@@ -4,13 +4,16 @@ import { connect } from 'react-redux';
 import { Undo, Redo } from '@material-ui/icons';
 import { Board } from 'futoshiki/model/Board';
 import { BoardMode } from 'futoshiki/model/Controls';
+import { ResultStatus } from 'futoshiki/model/Result';
 import { State, BoardPersistenceMode } from 'futoshiki/model/State';
 import { newBoardEvent } from 'futoshiki/events/NewBoardEvent';
 import { changeGameSizeEvent } from 'futoshiki/events/ChangeGameSizeEvent';
 import { restoreStateEvent } from 'futoshiki/events/RestoreStateEvent';
 import { toggleBoardModeEvent } from 'futoshiki/events/ToggleBoardModeEvent';
 import { resetBoardEvent } from 'futoshiki/events/ResetBoardEvent';
+import { solutionStatusEvent } from 'futoshiki/events/SolutionStatusEvent';
 import { showBoards } from 'futoshiki/services/BoardPersistence';
+import verifySolution from 'futoshiki/services/SolutionVerifier';
 
 const GAME_SIZES = [
     5,
@@ -27,6 +30,8 @@ interface IProps {
     boardHistory: Board[];
     currentIndex: number;
     boardMode: BoardMode;
+    board: Board;
+    resultStatus: ResultStatus | null;
 }
 
 const mapToProps = (state: State): IProps => ({
@@ -36,6 +41,8 @@ const mapToProps = (state: State): IProps => ({
     boardHistory: state.boardHistory.historyStates,
     currentIndex: state.boardHistory.currentIndex,
     boardMode: state.controls.boardMode,
+    board: state.board,
+    resultStatus: state.controls.resultStatus,
 });
 
 interface IActions {
@@ -46,6 +53,7 @@ interface IActions {
     saveView: () => void;
     toggleBoardMode: () => void;
     resetBoard: () => void;
+    checkSolution: (board: Board) => void;
 }
 
 const mapToActions = (dispatch: Dispatch): IActions => ({
@@ -56,6 +64,7 @@ const mapToActions = (dispatch: Dispatch): IActions => ({
     loadView: () => showBoards(dispatch)(BoardPersistenceMode.LOAD),
     toggleBoardMode: () => dispatch(toggleBoardModeEvent()),
     resetBoard: () => dispatch(resetBoardEvent()),
+    checkSolution: (board) => dispatch(solutionStatusEvent(verifySolution(board))),
 });
 
 function Controls({
@@ -65,6 +74,8 @@ function Controls({
     boardHistory,
     currentIndex,
     boardMode,
+    board,
+    resultStatus,
     newBoard,
     changeGameSize,
     restoreState,
@@ -72,7 +83,20 @@ function Controls({
     loadView,
     toggleBoardMode,
     resetBoard,
+    checkSolution,
 }: IProps & IActions): JSX.Element {
+    const ResultStatusText = (): JSX.Element => {
+        if (resultStatus === ResultStatus.SOLVED) {
+            return <div className="result-status solved">Solved!</div>;
+        } else if (resultStatus === ResultStatus.INCOMPLETE) {
+            return <div className="result-status incomplete">Incomplete</div>;
+        } else if (resultStatus === ResultStatus.ERROR) {
+            return <div className="result-status error">Error!</div>;
+        } else {
+            return <></>;
+        }
+    };
+
     const boardModeText: string = boardMode === BoardMode.COMPOSE ? 'Play Mode' : 'Prepare Mode';
 
     return (
@@ -91,6 +115,10 @@ function Controls({
                     <Redo />
                 </button>
             </div>
+            <div className="controls">
+                <button onClick={() => checkSolution(board)}>Verify</button>
+            </div>
+            <ResultStatusText />
             <div className="controls">
                 <button onClick={saveView}>Save</button>
                 <button onClick={loadView}>Load</button>

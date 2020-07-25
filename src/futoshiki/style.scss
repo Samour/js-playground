@@ -108,4 +108,20 @@
             }
         }
     }
+
+    .result-status {
+        text-align: center;
+
+        &.solved {
+            color: #00aa00;
+        }
+
+        &.incomplete {
+            color: #ee4f00;
+        }
+
+        &.error {
+            color: #ff0000;
+        }
+    }
 }
