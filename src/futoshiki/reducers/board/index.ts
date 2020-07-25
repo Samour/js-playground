@@ -3,17 +3,23 @@ import createBoard from 'futoshiki/services/BoardFactory';
 import { EventType } from 'futoshiki/events/EventType';
 import IEvent from 'futoshiki/events/IEvent';
 import { ICellValueEvent } from 'futoshiki/events/CellValueEvent';
+import { INewBoardEvent } from 'futoshiki/events/NewBoardEvent';
 import { IToggleCellNoteEvent } from 'futoshiki/events/ToggleCellNoteEvent';
 import { IClearCellNotesEvent } from 'futoshiki/events/ClearCellNotesEvent';
 import { IToggleLTConstraintEvent } from 'futoshiki/events/ToggleLTConstraintEvent';
+import { IRestoreStateEvent } from 'futoshiki/events/RestoreStateEvent';
+import { ILoadBoardEvent } from 'futoshiki/events/LoadBoardEvent';
 import toggleCellNote from './toggleCellNote';
 import toggleLTConstraint from './toggleLTConstraint';
 
-const INITIAL_BOARD_SIZE = 5;
+export const initialState: Board = createBoard(5);
 
 export default function reducer(state: Board | undefined, event: IEvent): Board {
-    state = state || createBoard(INITIAL_BOARD_SIZE);
-    if (event.type === EventType.CELL_VALUE) {
+    state = state || initialState;
+    if (event.type === EventType.NEW_BOARD) {
+        const { size } = event as INewBoardEvent;
+        return createBoard(size);
+    } else if (event.type === EventType.CELL_VALUE) {
         const { x, y, value } = event as ICellValueEvent;
         return {
             ...state,
@@ -41,6 +47,10 @@ export default function reducer(state: Board | undefined, event: IEvent): Board 
         return toggleCellNote(state, event as IToggleCellNoteEvent);
     } else if (event.type === EventType.TOGGLE_LT_CONSTRAINT) {
         return toggleLTConstraint(state, event as IToggleLTConstraintEvent);
+    } else if (event.type === EventType.RESTORE_STATE) {
+        return (event as IRestoreStateEvent).boardState;
+    } else if (event.type === EventType.LOAD_BOARD) {
+        return (event as ILoadBoardEvent).board.board;
     } else {
         return state;
     }

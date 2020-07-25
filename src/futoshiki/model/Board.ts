@@ -18,6 +18,16 @@ export interface Board {
     ltConstraints: LTConstraint[];
 }
 
+export interface PersistedBoard {
+    id: string;
+    board: Board;
+    name: string;
+}
+
+export interface PersistedBoardsStore {
+    boards: PersistedBoard[];
+}
+
 export const coordinateEquals = (left: Coordinate, right: Coordinate): boolean =>
     left.x === right.x && left.y === right.y;
 

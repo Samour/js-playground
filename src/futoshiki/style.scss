@@ -62,4 +62,46 @@
         align-items: center;
         justify-content: center;
     }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        margin: 10px;
+
+        & > * {
+            margin: 10px;
+        }
+    }
+
+    .saved-list {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .saved-board {
+            display: flex;
+            width: 400px;
+            min-height: 30px;
+            align-items: center;
+            margin: 5px;
+            padding: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f0f0f0;
+            }
+
+            &.focus {
+                background-color: #d3d3d3;;
+            }
+
+            &.selected {
+                border: 1px solid blue;
+            }
+
+            .delete-icon {
+                margin-left: auto;
+            }
+        }
+    }
 }
