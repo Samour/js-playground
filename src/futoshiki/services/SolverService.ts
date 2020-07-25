@@ -108,7 +108,7 @@ export default async ({ stepTimeout = -1 }: SolverConfiguration = {}) => {
         if (store.getState().board.cells[x][y].value || !store.getState().board.cells[x][y].possible.length) {
             return;
         }
-    
+
         let changeMade = false;
         const possibleValues = calculateCellPossibleValues(x, y);
         for (let value of store.getState().board.cells[x][y].possible) {
@@ -126,6 +126,64 @@ export default async ({ stepTimeout = -1 }: SolverConfiguration = {}) => {
 
         if (changeMade) {
             await updateAssociatedCells(x, y);
+        }
+    };
+
+    const applyValuesLinear = async (): Promise<boolean> => {
+        let hasChange = false;
+        for (let line = 0; line < size; line++) {
+            const valuesCount: Map<number, number[]> = new Map();
+            for (let vary = 0; vary < size; vary++) { // TODO continue refactoring from here
+                if (store.getState().board.cells[x][y].value) {
+                    continue;
+                }
+                for (let value of store.getState().board.cells[x][y].possible) {
+                    if (!valuesCount.has(value)) {
+                        valuesCount.set(value, []);
+                    }
+                    valuesCount.get(value)?.push(x);
+                }
+            }
+            for (let value of Array.from(valuesCount.keys())) {
+                if (valuesCount.get(value)?.length === 1) {
+                    const x: number = valuesCount.get(value)?.[0] || -1;
+                    store.dispatch(cellValueEvent(x ,y, value, false));
+                    await waitFn();
+                    hasChange = true;
+                    await updateAssociatedCells(x, y);
+                }
+            }
+        }
+    }
+    };
+
+    const applyValues = async (): Promise<void> => {
+        let hasChange: boolean = true;
+        while (hasChange) {
+            hasChange = false;
+            for (let y = 0; y < size; y++) {
+                const valuesCount: Map<number, number[]> = new Map();
+                for (let x = 0; x < size; x++) {
+                    if (store.getState().board.cells[x][y].value) {
+                        continue;
+                    }
+                    for (let value of store.getState().board.cells[x][y].possible) {
+                        if (!valuesCount.has(value)) {
+                            valuesCount.set(value, []);
+                        }
+                        valuesCount.get(value)?.push(x);
+                    }
+                }
+                for (let value of Array.from(valuesCount.keys())) {
+                    if (valuesCount.get(value)?.length === 1) {
+                        const x: number = valuesCount.get(value)?.[0] || -1;
+                        store.dispatch(cellValueEvent(x ,y, value, false));
+                        await waitFn();
+                        hasChange = true;
+                        await updateAssociatedCells(x, y);
+                    }
+                }
+            }
         }
     };
 
