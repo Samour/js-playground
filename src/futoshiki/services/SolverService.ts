@@ -1,8 +1,10 @@
-import { coordinateEquals } from 'futoshiki/model/Board';
+import { Coordinate, coordinateEquals } from 'futoshiki/model/Board';
 import { clearCellNotesEvent } from 'futoshiki/events/ClearCellNotesEvent';
 import { toggleCellNoteEvent } from 'futoshiki/events/ToggleCellNoteEvent';
 import { highlightCellEvent } from 'futoshiki/events/HighlightCellEvent';
 import { cellValueEvent } from 'futoshiki/events/CellValueEvent';
+import { solutionStatusEvent } from 'futoshiki/events/SolutionStatusEvent';
+import verifySolution from 'futoshiki/services/SolutionVerifier';
 import { store } from 'futoshiki/store';
 
 export interface SolverConfiguration {
@@ -129,11 +131,12 @@ export default async ({ stepTimeout = -1 }: SolverConfiguration = {}) => {
         }
     };
 
-    const applyValuesLinear = async (): Promise<boolean> => {
+    const applyValuesLinear = async (mapToCoordinate: (line: number, vary: number) => Coordinate): Promise<boolean> => {
         let hasChange = false;
         for (let line = 0; line < size; line++) {
             const valuesCount: Map<number, number[]> = new Map();
-            for (let vary = 0; vary < size; vary++) { // TODO continue refactoring from here
+            for (let vary = 0; vary < size; vary++) {
+                const { x, y } = mapToCoordinate(line, vary);
                 if (store.getState().board.cells[x][y].value) {
                     continue;
                 }
@@ -141,49 +144,33 @@ export default async ({ stepTimeout = -1 }: SolverConfiguration = {}) => {
                     if (!valuesCount.has(value)) {
                         valuesCount.set(value, []);
                     }
-                    valuesCount.get(value)?.push(x);
+                    valuesCount.get(value)?.push(vary);
                 }
             }
             for (let value of Array.from(valuesCount.keys())) {
                 if (valuesCount.get(value)?.length === 1) {
-                    const x: number = valuesCount.get(value)?.[0] || -1;
-                    store.dispatch(cellValueEvent(x ,y, value, false));
+                    const { x, y } = mapToCoordinate(line, valuesCount.get(value)?.[0] || 0);
+                    store.dispatch(cellValueEvent(x, y, value, false));
                     await waitFn();
                     hasChange = true;
                     await updateAssociatedCells(x, y);
                 }
             }
         }
-    }
+
+        return hasChange;
     };
 
     const applyValues = async (): Promise<void> => {
         let hasChange: boolean = true;
         while (hasChange) {
             hasChange = false;
-            for (let y = 0; y < size; y++) {
-                const valuesCount: Map<number, number[]> = new Map();
-                for (let x = 0; x < size; x++) {
-                    if (store.getState().board.cells[x][y].value) {
-                        continue;
-                    }
-                    for (let value of store.getState().board.cells[x][y].possible) {
-                        if (!valuesCount.has(value)) {
-                            valuesCount.set(value, []);
-                        }
-                        valuesCount.get(value)?.push(x);
-                    }
-                }
-                for (let value of Array.from(valuesCount.keys())) {
-                    if (valuesCount.get(value)?.length === 1) {
-                        const x: number = valuesCount.get(value)?.[0] || -1;
-                        store.dispatch(cellValueEvent(x ,y, value, false));
-                        await waitFn();
-                        hasChange = true;
-                        await updateAssociatedCells(x, y);
-                    }
-                }
-            }
+            hasChange = await applyValuesLinear(
+                (y, x) => ({ x, y }),
+            ) || hasChange;
+            hasChange = await applyValuesLinear(
+                (x, y) => ({ x, y, }),
+            ) || hasChange;
         }
     };
 
@@ -216,4 +203,7 @@ export default async ({ stepTimeout = -1 }: SolverConfiguration = {}) => {
             await updateAssociatedCells(x, y);
         }
     }
+    await applyValues();
+
+    store.dispatch(solutionStatusEvent(verifySolution(store.getState().board)));
 };
