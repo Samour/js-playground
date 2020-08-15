@@ -20,7 +20,7 @@ export default function reducer(state: Board | undefined, event: IEvent): Board 
         const { size } = event as INewBoardEvent;
         return createBoard(size);
     } else if (event.type === EventType.CELL_VALUE) {
-        const { x, y, value, provided } = event as ICellValueEvent;
+        const { x, y, value, provided, guess } = event as ICellValueEvent;
         return {
             ...state,
             cells: state.cells.map((r, i) => i === x ?
@@ -28,6 +28,7 @@ export default function reducer(state: Board | undefined, event: IEvent): Board 
                     ...c,
                     provided,
                     value,
+                    guess,
                 } : c)
                 : r,
             ),

@@ -45,6 +45,9 @@ function Cell({ cell, x, y, highlight, highlightCell }: IProps & IState & IActio
         if (cell.provided) {
             className.push('provided');
         }
+        if (cell.guess) {
+            className.push('guess');
+        }
     }
     if (x === highlight?.x && y === highlight?.y) {
         className.push('highlight');

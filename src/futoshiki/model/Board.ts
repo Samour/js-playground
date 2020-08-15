@@ -7,6 +7,7 @@ export interface Cell {
     value: number | null;
     possible: number[];
     provided: boolean;
+    guess: boolean;
 }
 
 export interface LTConstraint {

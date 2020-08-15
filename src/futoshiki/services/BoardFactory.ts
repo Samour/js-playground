@@ -13,6 +13,7 @@ export default function createBoard(size: number): Board {
                 value: null,
                 possible: [],
                 provided: false,
+                guess: false,
             });
         }
     }

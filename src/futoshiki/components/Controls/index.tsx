@@ -118,7 +118,7 @@ function Controls({
             </div>
             <div className="controls">
                 <button onClick={() => checkSolution(board)}>Verify</button>
-                <button onClick={() => solvePuzzle({ stepTimeout: 500 })}>Solve</button>
+                <button onClick={() => solvePuzzle({ stepTimeout: 1 })}>Solve</button>
             </div>
             <ResultStatusText />
             <div className="controls">

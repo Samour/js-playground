@@ -35,6 +35,10 @@
             &.provided {
                 font-weight: bold;
             }
+
+            &.guess {
+                color: blue;
+            }
         }
 
         &.highlight {

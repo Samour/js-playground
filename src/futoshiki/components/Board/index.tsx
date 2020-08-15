@@ -39,7 +39,7 @@ interface IActions {
 }
 
 const mapToActions = (dispatch: Dispatch): IActions => ({
-    setCellValue: (x, y, value, provided) => dispatch(cellValueEvent(x, y, value, provided)),
+    setCellValue: (x, y, value, provided) => dispatch(cellValueEvent(x, y, value, { provided })),
     toggleCellNote: (x, y, value) => dispatch(toggleCellNoteEvent({ x, y }, value)),
     clearCellNotes: (x, y) => dispatch(clearCellNotesEvent(x, y)),
     toggleNumericMode: () => dispatch(toggleNumericModeEvent()),

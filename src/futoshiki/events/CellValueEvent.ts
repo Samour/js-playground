@@ -6,17 +6,25 @@ export interface ICellValueEvent {
     y: number;
     value: number | null;
     provided: boolean;
+    guess: boolean;
 }
 
 export const cellValueEvent = (
     x: number,
     y: number,
     value: number | null,
-    provided: boolean,
+    {
+        provided = false,
+        guess = false,
+    }: {
+        provided?: boolean;
+        guess?: boolean;
+    } = {},
 ): ICellValueEvent => ({
     type: EventType.CELL_VALUE,
     x,
     y,
     value,
     provided,
+    guess,
 });
